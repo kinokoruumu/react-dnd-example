@@ -6,6 +6,7 @@ import { DragDropContext } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
 import {compose} from "redux";
 import BoardSquare from "./BoardSquare";
+import {canMoveKnight} from "../helper/knight";
 
 class Board extends Component {
 	constructor(props) {
@@ -33,16 +34,8 @@ class Board extends Component {
 		}
 	}
 
-	canMoveKnight(toX, toY) {
-		const [x, y] = this.props.knightPosition;
-		const dx = toX - x;
-		const dy = toY - y;
-
-		return (Math.abs(dx) === 2 && Math.abs(dy) === 1) || (Math.abs(dx) === 1 && Math.abs(dy) === 2)
-	}
-
 	handleSquareClick(toX, toY) {
-		if (this.canMoveKnight(toX, toY)) {
+		if (canMoveKnight(this.props.knightPosition, toX, toY)) {
 			this.props.move_knight(toX, toY)
 		}
 	}

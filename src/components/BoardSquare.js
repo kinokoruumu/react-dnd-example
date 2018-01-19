@@ -6,14 +6,12 @@ import {connect} from "react-redux";
 import {move_knight} from "../actions/actionCreators/knight";
 import {compose} from "redux";
 import { DropTarget } from 'react-dnd';
+import {canMoveKnight} from "../helper/knight";
 
 const squareTarget = {
-	canDrop(props) { // リファクタ
-		const [x, y] = props.knightPosition;
-		const dx = props.x - x;
-		const dy = props.y - y;
-
-		return (Math.abs(dx) === 2 && Math.abs(dy) === 1) || (Math.abs(dx) === 1 && Math.abs(dy) === 2)
+	canDrop(props) {
+		const {x, y} = props
+		return canMoveKnight(props.knightPosition, x, y)
 	},
 	drop(props) {
 		props.move_knight(props.x, props.y);
