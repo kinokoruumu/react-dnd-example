@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import Square from './Square'
 import Knight from './Knight'
 import {move_knight} from "../actions/actionCreators/knight"
 import {connect} from "react-redux"
