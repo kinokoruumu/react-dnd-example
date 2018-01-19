@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import Square from './Square'
 import Knight from './Knight'
 import {move_knight} from "../actions/actionCreators/knight"
 import {connect} from "react-redux"
+import { DragDropContext } from 'react-dnd'
+import HTML5Backend from 'react-dnd-html5-backend'
+import {compose} from "redux";
+import BoardSquare from "./BoardSquare";
 
 class Board extends Component {
 	constructor(props) {
@@ -11,23 +14,24 @@ class Board extends Component {
 	}
 
 	renderSquare(i) {
-		const x = i % 8
-		const y = Math.floor(i / 8)
-		const black = (x + y) % 2 === 1
-
-		const [knightX, knightY] = this.props.knightPosition
-		const piece = (x === knightX && y === knightY) ? <Knight /> : null
-
+		const x = i % 8;
+		const y = Math.floor(i / 8);
 		return (
 			<div key={i}
-					 style={{ width: '12.5%', height: '12.5%' }}
-					 onClick={() => this.handleSquareClick(x, y)}
-			>
-				<Square black={black}>
-					{piece}
-				</Square>
+					 style={{ width: '12.5%', height: '12.5%' }}>
+				<BoardSquare x={x}
+										 y={y}>
+					{this.renderPiece(x, y)}
+				</BoardSquare>
 			</div>
-		)
+		);
+	}
+
+	renderPiece(x, y) {
+		const [knightX, knightY] = this.props.knightPosition;
+		if (x === knightX && y === knightY) {
+			return <Knight />;
+		}
 	}
 
 	canMoveKnight(toX, toY) {
@@ -77,4 +81,7 @@ const mapDispatchToProps = dispatch => {
 	}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Board)
+export default compose(
+	DragDropContext(HTML5Backend),
+	connect(mapStateToProps, mapDispatchToProps),
+)(Board)
